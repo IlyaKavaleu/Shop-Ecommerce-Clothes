@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+
+
+    h1 {
+        font-size: 24px;
+        color: #333;
+    }
+
+    .user-info {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .user-info h2 {
+        font-size: 20px;
+        color: #555;
+    }
+
+    .user-info p {
+        font-size: 16px;
+        color: #777;
+    }
+
+    .user-actions h2 {
+        font-size: 20px;
+        color: #555;
+    }
+
+    .user-actions ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .user-actions ul li {
+        margin-bottom: 10px;
+    }
+
+    .user-actions ul li a {
+        text-decoration: none;
+        color: #007bff;
+    }
+
+    .user-actions ul li a:hover {
+        text-decoration: underline;
+    }
+</style>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="container">
+    <h1>Добро пожаловать в ваш личный кабинет!</h1>
+    <p>Здесь вы можете управлять своим профилем, просматривать информацию о заказах и многое другое.</p>
+
+    <!-- Пример информации о пользователе -->
+    <div class="user-info">
+        <h2>Информация о пользователе:</h2>
+        <p>
+        {% if user.image and user.image.url %}
+            <img src="{{ user.image.url }}" width="250px" height="250px">
+        {% else %}
+            <img src="{% static 'images/default_avatar/default_avatar.jpg' %}" width="250px" height="250px">
+        {% endif %}
+        </p>
+        <p>Имя: {{ user.first_name }}</p>
+        <p>Фамилия: {{ user.last_name }}</p>
+        <p>Возраст: {{ user.age }}</p>
+        <p>Email: {{ user.email }}</p>
+    </div>
+
+    <!-- Дополнительные действия для пользователя -->
+    <div class="user-actions">
+        <h2>Дополнительные действия:</h2>
+        <ul>
+            <li><a href="{% url 'users:edit_profile' user.id %}">Редактировать профиль</a></li>
+            <li><a href="{% url 'orders:orders_list' %}">История заказов</a></li>
+            <!-- Добавьте здесь другие действия, если это необходимо -->
+        </ul>
+    </div>
+</div>
+{% endblock content %}

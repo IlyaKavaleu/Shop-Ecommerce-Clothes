@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<style>
+    .form-search{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    transition: all 1s;
+    width: 50px;
+    height: 50px;
+    background: white;
+    box-sizing: border-box;
+    border-radius: 25px;
+    border: 4px solid white;
+    padding: 5px;
+}
+
+.input-search{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;;
+    height: 42.5px;
+    line-height: 30px;
+    outline: 0;
+    border: 0;
+    display: none;
+    font-size: 1em;
+    border-radius: 20px;
+    padding: 0 20px;
+}
+
+.fa{
+    box-sizing: border-box;
+    padding: 10px;
+    width: 42.5px;
+    height: 42.5px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 50%;
+    color: #07051a;
+    text-align: center;
+    font-size: 1.2em;
+    transition: all 1s;
+}
+
+.form-search:hover{
+    width: 200px;
+    cursor: pointer;
+}
+
+.form-search:hover input{
+    display: block;
+}
+
+.form-search:hover .fa{
+    background: #07051a;
+    color: white;
+}
+</style>
+   <center>
+    <div style="width: 40%; padding: 20px; margin-top: 125px;">
+        <ul style="display: flex; list-style: none; justify-content: center; align-items: center;">
+            <li><a href="{% url 'products:all_products' %}"><h2 style="font-size: 20px; color: #333; margin: 0 20px;">Все</h2></a></li>
+            {% for category in categories %}
+            <li><a href="{% url 'products:detail_category' category.id %}"><p style="font-size: 16px; color: #333; margin: 0 15px;">{{ category.title }}</p></a></li>
+            {% endfor %}
+            <li>
+                <form class="form-search" method="post" action="{% url 'products:search' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input class="input-search" type="text" name="search_query" placeholder="Поиск...">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</center>
+
+
+<div style="display: flex; justify-content: space-between; margin-top: 150px;">
+    <div style="width: 10%; height: 20%; background-color: #f0f0f0; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); text-align: center; margin: 0 auto;">
+        <center>
+        <p>Цена</p>
+        <form method="post" action="{% url 'products:search_by_price' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range1" name="price" value="5">
+                <label for="price_range1">до 5 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range2" name="price" value="10">
+                <label for="price_range2">до 10 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range3" name="price" value="15">
+                <label for="price_range3">до 15 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range4" name="price" value="20">
+                <label for="price_range4">до 20 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range5" name="price" value="30">
+                <label for="price_range5">до 30 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range6" name="price" value="50">
+                <label for="price_range6">до 50 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range7" name="price" value="100">
+                <label for="price_range7">до 100 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range8" name="price" value="200">
+                <label for="price_range8">до 200 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range9" name="price" value="500">
+                <label for="price_range9">до 500 zl</label>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <input type="checkbox" id="price_range10" name="price" value="501">
+                <label for="price_range10">свыше 500 zl</label>
+            </div>
+            <button class="btn btn-success">Искать</button>
+        </form>
+    </center>
+    </div>
+
+    <div style="width: 75%; padding: 20px;">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+            {% if products is not None %}
+                {% for product in products %}
+                    <div style="width: 25%; margin: 10px; padding: 10px;">
+                        <a href="{% url 'products:detail_product' product.id %}">
+                            <img src="{{ product.image.url }}" width="200px" height="250px" style="margin-bottom: 10px;">
+                            <p style="font-size: 18px; color: #333; margin-bottom: 5px;">{{ product.title }}</p>
+                            <p style="font-size: 16px; color: #333;">Price: ${{ product.price }}</p>
+                        </a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div style="width: 25%; margin: 10px; padding: 10px;">
+                    {{ empty_data }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

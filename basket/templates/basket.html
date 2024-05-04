@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif; /* Шрифт */
+        }
+        h2 {
+            text-align: center;
+        }
+
+        .product {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .product img {
+            width: 100px;
+            height: 120px;
+            margin-right: 20px;
+        }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .total {
+            text-align: right;
+            margin-top: 20px;
+        }
+        * li, p {
+            font-family: arvo;
+        };
+    </style>
+
+    <div class="container">
+        <h2>Корзина</h2>
+        {% for basket in baskets %}
+            <div class="product">
+                <img src="{{ basket.product.image.url }}" alt="{{ basket.product.title }}">
+                <div class="product-details">
+                    <p>{{ basket.product.title }}</p>
+                    <p>{{ basket.product.article }}</p>
+                    <p>{{ basket.product.price }}</p>
+                    <p>{{ basket.quantity }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="total">
+            <p>Общая цена: {{ baskets.price_all_products }}</p>
+            <p>Сумма всех продуктов: {{ baskets.sum_all_products }}</p>
+        </div>
+        <a href="{% url 'orders:order_create' %}">Перейти к оплате</a>
+    </div>
+{% endblock content %}

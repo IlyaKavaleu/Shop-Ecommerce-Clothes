@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<style>
+    .product-container {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        margin: 0 auto;
+        margin-top: 50px; /* Уменьшил отступ сверху для примера */
+        padding: 20px;
+        background-color: white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+    }
+
+    .product-block {
+        display: flex;
+        align-items: flex-start; /* Выровняли блоки по верхнему краю */
+    }
+
+    .product-image {
+        flex: 1;
+        text-align: center;
+    }
+
+    .product-image img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .product-info {
+        flex: 1;
+        padding: 0 20px;
+        text-align: left;
+    }
+
+    .price {
+        font-weight: bold;
+    }
+
+    .add-to-cart {
+        background-color: #3CB371;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .add-to-cart:hover {
+        background-color: #98FB98;
+    }
+
+    .description, .return-policy {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .description h3, .return-policy h3 {
+        color: #333;
+    }
+
+    .description p, .return-policy p {
+        color: #666;
+    }
+</style>
+
+<div class="product-container" style="margin-top: 150px;">
+    <p style="margin-left: 15px;"><a href="{% url 'products:shop' %}">Главная</a> / Ваш продукт</p>
+    <div class="product-block">
+        <div class="product-image">
+            <img src="{{ product.image.url }}" width="350px" height="500px">
+        </div>
+        <div class="product-info">
+            <h1><strong>{{ product.title }}</strong></h1>
+            <p><strong>Артикул:</strong> {{ product.article }}</p>
+            <p><strong>Цена:</strong> {{ product.price }}</p>
+            <p><strong>Количество:</strong> {{ product.quantity }}</p>
+            <p><strong>Размер:</strong> {{ product.size }}</p>
+            <p><strong>Описание:</strong> {{ product.description }}</p>
+            <a href="{% url 'basket:basket_add' product.id %}"><button class="add-to-cart">Добавить в корзину</button></a>
+        </div>
+    </div>
+    <div class="description">
+        <h3>О товаре</h3>
+        <p>Это информация о товаре...</p>
+    </div>
+    <div class="return-policy">
+        <h3>Политика возврата</h3>
+        <p>Это правила и условия возврата товара и денег. Расскажите посетителям, что нужно сделать,
+            если они захотят вернуть товар и получить назад свои деньги. Четкая и ясная политика возврата —
+            это хороший способ построить доверительные отношения с клиентами.</p>
+    </div>
+</div>
+{% endblock content %}

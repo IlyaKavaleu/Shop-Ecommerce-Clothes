@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Стили для контейнера продуктов */
+    .product-container {
+        margin-top: 100px;
+        position: relative;
+        display: grid; /* Использование сетки */
+        grid-template-columns: repeat(2, minmax(0, 1fr)); /* Два столбца */
+        display: flex;
+        justify-content: center; /* Горизонтальное выравнивание по центру */
+        align-items: center
+    }
+
+    /* Стили для блока продукта */
+    .product-item {
+        max-width: 300px; /* Максимальная ширина блока */
+        width: 60%; /* Ширина блока */
+        padding: 10px; /* Поля вокруг блока */
+        margin: 20px;
+    }
+
+    /* Стили для изображения продукта */
+    .product-image {
+        width: 100%; /* Ширина изображения */
+        height: auto; /* Автоматическая высота */
+        margin-bottom: 10px; /* Отступ снизу */
+    }
+
+    /* Стили для названия продукта */
+    .product-title {
+        font-size: 18px; /* Размер шрифта */
+        color: #333; /* Цвет текста */
+        margin-bottom: 5px; /* Отступ снизу */
+    }
+
+    /* Стили для описания продукта */
+    .product-description {
+        font-size: 16px; /* Размер шрифта */
+        color: #333; /* Цвет текста */
+        margin-bottom: 10px; /* Отступ снизу */
+    }
+
+    /* Стили для цены продукта */
+    .product-price {
+        font-size: 16px; /* Размер шрифта */
+        color: #333; /* Цвет текста */
+    }
+</style>
+
+<div class="product-container">
+    {% for product in products %}
+        <div class="product-item">
+            <a href="{% url 'products:detail_product' product.id %}">
+                <img class="product-image" src="{{ product.image.url }}" alt="{{ product.title }}">
+                <p class="product-title">{{ product.title }}</p>
+                <p class="product-price">Price: zl {{ product.price }}</p>
+            </a>
+        </div>
+    {% endfor %}
+</div>
+
+<!--<script>-->
+<!--    document.addEventListener("DOMContentLoaded", function() {-->
+<!--        var leftBlock = document.getElementById("left-block");-->
+<!--        setTimeout(function() {-->
+<!--            leftBlock.style.opacity = "1";-->
+<!--        }, 1000); // Задержка в 1 секунду (1000 миллисекунд)-->
+<!--    });-->
+<!--</script>-->
+{% endblock content %}

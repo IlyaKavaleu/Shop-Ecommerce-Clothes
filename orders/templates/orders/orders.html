@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.orders {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.orders table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders th,
+.orders td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.orders th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.orders td {
+    text-align: center;
+}
+
+.orders a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.orders a:hover {
+    text-decoration: underline;
+}
+</style>
+<center>
+    <section style="margin-top: 110px;">
+        <div class="container pt-5" style="text-align: center;">
+            <div class="row justify-content-center mt-5">
+                <div class="col-lg-8">
+                    <div class="text-center">
+                        <h1>Заказы</h1>
+                        <div class="orders mt-5">
+                            <table class="table">
+                                <thead>
+                                <tr class="table-light">
+                                    <th scope="col">#</th>
+                                    <th scope="col">Статус</th>
+                                    <th scope="col">Создан</th>
+                                    <th scope="col">Итого</th>
+                                    <th scope="col">Действие</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for order in object_list %}
+                                    <tr>
+                                        <th scope="row">{{ order.id }}</th>
+                                        <td>{{ order.get_status_display }}</td>
+                                        <td>{{ order.created }}</td>
+                                        <td>{{ order.basket_history.total_sum }} pln.</td>
+                                        <td>
+                                            <a href="{% url 'orders:order' order.id %}">просмотреть</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</center>
+{% endblock %}
