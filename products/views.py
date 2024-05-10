@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -10,35 +11,73 @@ def index(request):
 
 
 def detail_category(request, category_id):
-    categories = Category.objects.all()
-    category = Category.objects.get(id=category_id)
-    products = Products.objects.filter(category=category)
-    context = {'category': category, 'products': products, 'categories': categories}
+    context = {}
+    categories = cache.get('categories')
+    category = cache.get(f'category_{category_id}')
+    products = cache.get(f'products_{category_id}')
+    if not categories or not category or not products:
+        categories = Category.objects.all()   # show all
+        category = Category.objects.get(id=category_id)
+        products = Products.objects.filter(category=category)
+
+        cache.set('categories', categories, 10)
+        cache.set(f'category_{category_id}', category, 10)
+        cache.set(f'products_{category_id}', products, 10)\
+
+        context['categories'] = categories
+        context['category'] = category
+        context['products'] = products
+    else:
+        context['categories'] = categories
+        context['category'] = category
+        context['products'] = products
     return render(request, 'shop.html', context)
 
 
 def search_by_price(request):
-    categories = Category.objects.all()
+    context = {}
+    categories = cache.get('categories')
+    if not categories:
+        context['categories'] = Category.objects.all()
+        cache.set('categories', categories, 10)
     if request.method == 'POST':
         price = request.POST.get('price', '')
         if not price:
             context = {'empty_data': 'Nothing found', 'categories': categories}
             return render(request, 'shop.html', context=context)
         if int(price) >= 501:
-            products = Products.objects.filter(price__gte=price)
-            context = {'products': products, 'categories': categories}
+            products = cache.get('products')
+            if not products:
+                context['products'] = Products.objects.filter(price__gte=price)
+                cache.set('products', products, 10)
+            else:
+                context['products'] = products
             return render(request, 'shop.html', context=context)
         else:
-            products = Products.objects.filter(price__lte=price)
-            context = {'products': products, 'categories': categories}
+            products = cache.get('products')
+            if not products:
+                context['products'] = Products.objects.filter(price__lte=price)
+                cache.set('products', products, 10)
+            else:
+                context = {'products': products}
             return render(request, 'shop.html', context=context)
+    else:
+        context['categories'] = categories
     return render(request, 'shop.html')
 
 
 def all_products(request):
-    products = Products.objects.all()
-    categories = Category.objects.all()
-    context = {'products': products, 'categories': categories}
+    context = {}
+    products = cache.get('products')
+    categories = cache.get('categories')
+    if not products or not categories:
+        context['products'] = Products.objects.all()
+        context['categories'] = Category.objects.all()
+        cache.set('products', products, 10)
+        cache.set('categories', categories, 10)
+    else:
+        context['categories'] = categories
+        context['products'] = products
     return render(request, 'shop.html', context)
 
 
@@ -47,9 +86,17 @@ def contacts(request):
 
 
 def shop(request):
-    categories = Category.objects.all()
-    products = Products.objects.all()
-    context = {'categories': categories, 'products': products}
+    context = {}
+    categories = cache.get('categories')
+    products = cache.get('products')
+    if not categories or not products:
+        context['categories'] = Category.objects.all()
+        context['products'] = Products.objects.all()
+        cache.set('categories', categories, 10)
+        cache.set('products', products, 10)
+    else:
+        context['categories'] = categories
+        context['products'] = products
     return render(request, 'shop.html', context)
 
 

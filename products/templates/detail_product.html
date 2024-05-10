@@ -67,7 +67,7 @@
     }
 </style>
 
-<div class="product-container" style="margin-top: 150px;">
+<div id="brand" class="product-container" style="margin-top: 150px;">
     <p style="margin-left: 15px;"><a href="{% url 'products:shop' %}">Главная</a> / Ваш продукт</p>
     <div class="product-block">
         <div class="product-image">
@@ -80,18 +80,12 @@
             <p><strong>Количество:</strong> {{ product.quantity }}</p>
             <p><strong>Размер:</strong> {{ product.size }}</p>
             <p><strong>Описание:</strong> {{ product.description }}</p>
-            <a href="{% url 'basket:basket_add' product.id %}"><button class="add-to-cart">Добавить в корзину</button></a>
+            <a href="{% url 'basket:basket_add' product.id %}"><button class="add-to-cart"><p id="brand">Dodaj do koszyka</p></button></a>
         </div>
     </div>
     <div class="description">
-        <h3>О товаре</h3>
-        <p>Это информация о товаре...</p>
-    </div>
-    <div class="return-policy">
-        <h3>Политика возврата</h3>
-        <p>Это правила и условия возврата товара и денег. Расскажите посетителям, что нужно сделать,
-            если они захотят вернуть товар и получить назад свои деньги. Четкая и ясная политика возврата —
-            это хороший способ построить доверительные отношения с клиентами.</p>
+        <h3>O produkcie</h3>
+        <p><strong>{{ product.about_product }}</strong></p>
     </div>
 </div>
 {% endblock content %}

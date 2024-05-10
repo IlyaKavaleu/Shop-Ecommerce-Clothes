@@ -2,31 +2,33 @@
 {% load static %}
 {% block content %}
 <style>
-
+    .container-account {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
 
     h1 {
-        font-size: 24px;
+        font-size: 36px;
+        font-weight: bold;
         color: #333;
-    }
-
-    .user-info {
         margin-bottom: 20px;
-        text-align: left;
     }
 
-    .user-info h2 {
-        font-size: 20px;
-        color: #555;
+    p {
+        color: #666;
+        margin-bottom: 10px;
+        font-size: 18px;
     }
 
-    .user-info p {
-        font-size: 16px;
-        color: #777;
-    }
-
-    .user-actions h2 {
-        font-size: 20px;
-        color: #555;
+    .user-info img {
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
     }
 
     .user-actions ul {
@@ -39,50 +41,45 @@
     }
 
     .user-actions ul li a {
-        text-decoration: none;
         color: #007bff;
+        text-decoration: none;
+        font-size: 18px;
     }
 
     .user-actions ul li a:hover {
         text-decoration: underline;
     }
 </style>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<div class="container">
-    <h1>Добро пожаловать в ваш личный кабинет!</h1>
-    <p>Здесь вы можете управлять своим профилем, просматривать информацию о заказах и многое другое.</p>
 
-    <!-- Пример информации о пользователе -->
-    <div class="user-info">
-        <h2>Информация о пользователе:</h2>
-        <p>
-        {% if user.image and user.image.url %}
-            <img src="{{ user.image.url }}" width="250px" height="250px">
-        {% else %}
-            <img src="{% static 'images/default_avatar/default_avatar.jpg' %}" width="250px" height="250px">
-        {% endif %}
-        </p>
-        <p>Имя: {{ user.first_name }}</p>
-        <p>Фамилия: {{ user.last_name }}</p>
-        <p>Возраст: {{ user.age }}</p>
-        <p>Email: {{ user.email }}</p>
-    </div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container-account" id="brand" style="margin-bottom: 20px;">
+    <center>
+        <h1>Добро пожаловать в ваш личный кабинет!</h1>
+        <p>Здесь вы можете управлять своим профилем, просматривать информацию о заказах и многое другое.</p>
 
-    <!-- Дополнительные действия для пользователя -->
-    <div class="user-actions">
-        <h2>Дополнительные действия:</h2>
-        <ul>
-            <li><a href="{% url 'users:edit_profile' user.id %}">Редактировать профиль</a></li>
-            <li><a href="{% url 'orders:orders_list' %}">История заказов</a></li>
-            <!-- Добавьте здесь другие действия, если это необходимо -->
-        </ul>
-    </div>
+        <!-- Пример информации о пользователе -->
+        <div class="user-info">
+            <img src="{% if user.image and user.image.url %}{{ user.image.url }}{% else %}{% static 'images/default_avatar/default_avatar.jpg' %}{% endif %}" width="200px" height="200px">
+            <p>Имя: {{ user.first_name }}</p>
+            <p>Фамилия: {{ user.last_name }}</p>
+            <p>Возраст: {{ user.age }}</p>
+            <p>Email: {{ user.email }}</p>
+        </div>
+
+        <div class="user-actions">
+            <h2>Дополнительные действия:</h2>
+            <ul>
+                <li><a href="{% url 'users:edit_profile' user.id %}">Редактировать профиль</a></li>
+                <li><a href="{% url 'orders:orders_list' %}">История заказов</a></li>
+            </ul>
+        </div>
+    </center>
 </div>
 {% endblock content %}

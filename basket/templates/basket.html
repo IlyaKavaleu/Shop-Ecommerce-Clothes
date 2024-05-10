@@ -2,62 +2,116 @@
 {% load static %}
 {% block content %}
     <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif; /* Шрифт */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            padding-top: 50px;
         }
-        h2 {
-            text-align: center;
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 20px; /* Добавлено для отступов слева и справа */
         }
 
         .product {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
+            width: calc(33.33% - 20px);
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease; /* Плавное изменение тени при наведении */
+        }
+
+        .product:hover {
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Увеличение тени при наведении */
         }
 
         .product img {
             width: 100px;
             height: 120px;
             margin-right: 20px;
+            float: left;
         }
 
         .product-details {
-            flex-grow: 1;
+            padding: 10px;
+        }
+
+        .product-details p {
+            margin: 0;
         }
 
         .total {
             text-align: right;
             margin-top: 20px;
+            font-weight: bold;
+            font-size: 18px;
         }
-        * li, p {
-            font-family: arvo;
-        };
+
+        .total p {
+            margin: 5px 0;
+        }
+
+        .checkout-button {
+            display: block;
+            width: 100%;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease; /* Плавное изменение цвета кнопки при наведении */
+        }
+
+        .checkout-button:hover {
+            background-color: #0056b3;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            width: 100%; /* Ширина заголовка на всю ширину контейнера */
+        }
+
+        @media screen and (max-width: 768px) {
+            .product {
+                width: calc(50% - 20px);
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .product {
+                width: calc(100% - 20px);
+            }
+        }
     </style>
 
-    <div class="container">
-        <h2>Корзина</h2>
+    <div id="brand" class="container" style="margin-top: 150px;">
+        <h2>Koszyk</h2>
         {% for basket in baskets %}
             <div class="product">
                 <img src="{{ basket.product.image.url }}" alt="{{ basket.product.title }}">
                 <div class="product-details">
-                    <p>{{ basket.product.title }}</p>
-                    <p>{{ basket.product.article }}</p>
-                    <p>{{ basket.product.price }}</p>
-                    <p>{{ basket.quantity }}</p>
+                    <p>Имя: {{ basket.product.title }}</p>
+                    <p>Артикл: {{ basket.product.article }}</p>
+                    <p>Цена: {{ basket.product.price }}</p>
+                    <p>Количество: {{ basket.quantity }}</p>
                 </div>
             </div>
         {% endfor %}
         <div class="total">
-            <p>Общая цена: {{ baskets.price_all_products }}</p>
-            <p>Сумма всех продуктов: {{ baskets.sum_all_products }}</p>
+            <p>Całkowita cena: {{ baskets.price_all_products }}</p>
+            <p>Suma wszystkich produktów: {{ baskets.sum_all_products }}</p>
         </div>
-        <a href="{% url 'orders:order_create' %}">Перейти к оплате</a>
+        <div>
+            <a class="checkout-button" href="{% url 'orders:order_create' %}">Przejdź do płatności</a>
+        </div>
     </div>
 {% endblock content %}

@@ -24,7 +24,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 50%;;
+    width: 70%;;
     height: 42.5px;
     line-height: 30px;
     outline: 0;
@@ -53,6 +53,7 @@
 .form-search:hover{
     width: 200px;
     cursor: pointer;
+    transition: all 0.5s; /* Увеличиваем время анимации до 0.5 секунды */
 }
 
 .form-search:hover input{
@@ -65,17 +66,17 @@
 }
 </style>
    <center>
-    <div style="width: 40%; padding: 20px; margin-top: 125px;">
+    <div style="width: 40%; padding: -20px; margin-top: 135px;" id="brand">
         <ul style="display: flex; list-style: none; justify-content: center; align-items: center;">
             <li><a href="{% url 'products:all_products' %}"><h2 style="font-size: 20px; color: #333; margin: 0 20px;">Все</h2></a></li>
             {% for category in categories %}
-            <li><a href="{% url 'products:detail_category' category.id %}"><p style="font-size: 16px; color: #333; margin: 0 15px;">{{ category.title }}</p></a></li>
+                <li><a href="{% url 'products:detail_category' category.id %}"><p style="font-size: 13px; color: #333; margin: 0 15px;">{{ category.title }}</p></a></li>
             {% endfor %}
-            <li>
+            <li style="padding-top: 50px;">
                 <form class="form-search" method="post" action="{% url 'products:search' %}" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input class="input-search" type="text" name="search_query" placeholder="Поиск...">
-                    <button type="submit"><i class="fa fa-search"></i></button>
+                    <input class="input-search" id="brand" type="text" name="search_query" placeholder="Szukaj...">
+                    <i class="fa fa-search"></i>
                 </form>
             </li>
         </ul>
@@ -83,8 +84,9 @@
 </center>
 
 
-<div style="display: flex; justify-content: space-between; margin-top: 150px;">
-    <div style="width: 10%; height: 20%; background-color: #f0f0f0; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); text-align: center; margin: 0 auto;">
+<div style="display: flex; justify-content: space-between; margin-top: 0px;" id="brand">
+    <div style="width: 13%; height: 20%; background-color: #f0f0f0; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+     text-align: center; margin-left: 30px; margin-top: 40px;">
         <center>
         <p>Цена</p>
         <form method="post" action="{% url 'products:search_by_price' %}" enctype="multipart/form-data">
@@ -129,29 +131,34 @@
                 <input type="checkbox" id="price_range10" name="price" value="501">
                 <label for="price_range10">свыше 500 zl</label>
             </div>
-            <button class="btn btn-success">Искать</button>
+            <button id="brand" class="btn btn-success">Искать</button>
         </form>
     </center>
     </div>
 
     <div style="width: 75%; padding: 20px;">
-        <div style="display: flex; flex-wrap: wrap; justify-content: center;">
-            {% if products is not None %}
-                {% for product in products %}
-                    <div style="width: 25%; margin: 10px; padding: 10px;">
-                        <a href="{% url 'products:detail_product' product.id %}">
-                            <img src="{{ product.image.url }}" width="200px" height="250px" style="margin-bottom: 10px;">
-                            <p style="font-size: 18px; color: #333; margin-bottom: 5px;">{{ product.title }}</p>
-                            <p style="font-size: 16px; color: #333;">Price: ${{ product.price }}</p>
-                        </a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <div style="width: 25%; margin: 10px; padding: 10px;">
-                    {{ empty_data }}
+<div style="width: 75%; padding: 20px;">
+    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+        {% if products is not None %}
+            {% for product in products %}
+                <div style="width: calc(25% - 20px); margin: 10px; padding: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                    <a href="{% url 'products:detail_product' product.id %}" style="text-decoration: none; color: #333;">
+                        <div style="overflow: hidden; border-radius: 8px;">
+                            <img src="{{ product.image.url }}" style="width: 100%; height: 250px; object-fit: cover;">
+                        </div>
+                        <p style="font-size: 18px; margin: 10px 0; font-weight: bold;">{{ product.title }}</p>
+                        <p style="font-size: 16px; margin: 0;">Price: ${{ product.price }}</p>
+                    </a>
                 </div>
-            {% endif %}
-        </div>
+            {% endfor %}
+        {% else %}
+            <div style="width: calc(25% - 20px); margin: 10px; padding: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px;">
+                {{ empty_data }}
+            </div>
+        {% endif %}
     </div>
+</div>
+</div>
+
 </div>
 {% endblock content %}

@@ -29,6 +29,7 @@ urlpatterns = [
     path('orders/', include('orders.urls', namespace='orders')),
     path('webhook/stripe/', views.stripe_webhook_view, name='stripe_webhook'),
     path('api/', include('api.urls', namespace='api')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]
 
 

@@ -33,7 +33,8 @@
         }
         .centered-block {
             background-color: #f0f0f0;
-            margin-top: 300px;
+            margin-top: 150px;
+            margin-bottom: 150px;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -44,7 +45,7 @@
 </head>
 <body>
 <center>
-    <div class="centered-block">
+    <div class="centered-block" id="brand">
         <h2>Edit Profile</h2>
         <form action="{% url 'users:change_pass' user.id %}" method="POST">
             {% csrf_token %}
