@@ -107,10 +107,9 @@ def detail_product(request, product_id):
 
 
 def search(request):
-    categories = Category.objects.all()
     if request.method == 'POST':
+        categories = Category.objects.all()
         search_query = request.POST.get('search_query', '')
-        print(search_query)
         if not search_query:
             context = {'empty_data': 'Nothing found', 'categories': categories}
         else:

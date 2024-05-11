@@ -1,5 +1,6 @@
 from http import HTTPStatus
 import stripe
+from django.core.cache import cache
 from django.http import HttpResponse
 from http import HTTPStatus
 from django.http import HttpResponseRedirect
@@ -11,6 +12,8 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.list import ListView
 from stripe.error import SignatureVerificationError
+
+from products.models import Products
 from .forms import OrderForm
 from .models import Order
 from shop import settings
@@ -38,14 +41,30 @@ class OrderListView(ListView):
         queryset = super(OrderListView, self).get_queryset()
         return queryset.filter(initiator=self.request.user)
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(OrderListView, self).get_context_data()
+        categories = cache.get('categories')
+        if not categories:
+            context['categories'] = Order.objects.all()
+            cache.set('categories', context['categories'], 10)
+        else:
+            context['categories'] = categories
+        return context
+
 
 class OrderDetailView(DetailView):
     template_name = 'orders/order.html'
     model = Order
 
     def get_context_data(self, **kwargs):
-        context = super(OrderDetailView, self).get_context_data(**kwargs)
-        context['title'] = f'Store - Order #{ self.object.id }'
+        context = super().get_context_data(**kwargs)
+        order = cache.get('order')
+        if not order:
+            order = self.get_object()
+            context['title'] = f'Store - Order #{order.id}'
+            cache.set('order', order, 10)
+            context['order'] = order
+        context['order'] = order
         return context
 
 

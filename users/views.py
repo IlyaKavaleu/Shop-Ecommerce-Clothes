@@ -11,14 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 # from shop.settings import EMAIL_HOST_USER
-
-
-def registration_email(request, username, email):
-    current_site = get_current_site(request)
-    subject = 'Подтверждение регистрации'
-    message = (f'Здравствуйте, {username}!\n\nДля завершения регистрации на сайте {current_site.domain},'
-               f' перейдите по следующей ссылке:\n\n{current_site.domain}/users/confirm-registration/')
-    send_mail(subject, message, 'kavaleuilia@gmail.com', [email])
+from .tasks import registration_email, email_after_login
 
 
 def register(request):
@@ -26,7 +19,7 @@ def register(request):
         form = RegisterUpForm(request.POST)
         if form.is_valid():
             username, email = form.cleaned_data.get('username'), form.cleaned_data.get('email')
-            registration_email(request, username, email)
+            registration_email.delay(username, email)   # tasks[celery]
             form.save()
             return redirect('users:login_view')
     else:
@@ -55,26 +48,12 @@ def edit_profile(request, user_id):
     return render(request, 'registration/edit_profile.html', context)
 
 
-def email_after_login(request, username, email):
-    current_site = get_current_site(request)
-    subject = f'Добро пожаловать в {current_site}.'
-    message = (
-        f'Здравствуйте, {username}!\n\n'
-        f'Мы рады видеть вас снова на сайте {current_site.domain}.\n'
-        f'Вы успешно вошли в свой аккаунт.\n'
-        f'Надеемся, что ваше пребывание будет приятным и вы найдете все необходимые товары.\n\n'
-        f'С уважением,\n'
-        f'Команда {current_site}'
-    )
-    send_mail(subject, message, 'kavaleuilia@gmail.com', [email])
-
-
 def login_view(request):
     if request.method == 'POST':
         user = authenticate(request, username=request.POST['email'], password=request.POST['password1'])
         if user is not None:
             login(request, user)
-            email_after_login(request, request.user.username, request.user.email)
+            email_after_login.delay(request.user.username, request.user.email)  # tasks[celery]
             return redirect('products:index')
         else:
             return HttpResponse('User does not exist!')

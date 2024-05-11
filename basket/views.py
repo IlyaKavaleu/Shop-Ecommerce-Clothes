@@ -1,11 +1,17 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .models import Basket
+from django.core.cache import cache
 
 
 def basket(request):
-    baskets = Basket.objects.filter(user=request.user)
-    context = {'baskets': baskets}
+    context = {}
+    baskets = cache.get('baskets')
+    if not baskets:
+        context[baskets] = Basket.objects.filter(user=request.user)
+        cache.set('baskets', baskets, 10)
+    else:
+        context['baskets'] = baskets
     return render(request, 'basket.html', context=context)
 
 
